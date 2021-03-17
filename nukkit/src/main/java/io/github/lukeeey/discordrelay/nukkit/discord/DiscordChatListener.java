@@ -7,6 +7,7 @@ import io.github.lukeeey.discordrelay.nukkit.util.TextFormatConverter;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -30,7 +31,7 @@ public class DiscordChatListener extends ListenerAdapter {
                 .replace("{message}", "?"));
 
         if (message.isEmpty()) return;
-        if (handleCommands(message)) return;
+        if (handleCommands(event.getMember(), event.getChannel(), message)) return;
 
         if (!plugin.getConfig().getBoolean("relay.discord-to-server.enabled")) return;
         if (message.length() > plugin.getConfig().getInt("relay.discord-to-server.max-message-length")) return;
@@ -49,27 +50,13 @@ public class DiscordChatListener extends ListenerAdapter {
         plugin.broadcastMessage(response);
     }
 
-    private boolean handleCommands(String message) {
+    private boolean handleCommands(Member member, TextChannel channel, String message) {
         String commandPrefix = plugin.getConfig().getString("discord-command-prefix");
         List<String> enabledCommands = plugin.getConfig().getStringList("enabled-discord-commands");
+        DiscordCommand command = plugin.getDiscordCommand(message.substring(1));
 
-        if (message.equalsIgnoreCase(commandPrefix + "playerlist") && enabledCommands.contains("playerlist")) {
-            if (plugin.getServer().getOnlinePlayers().isEmpty()) {
-                plugin.sendDiscordMessage("**No online players**");
-            } else {
-                String response = "";
-                response += "**Online players (" + plugin.getServer().getOnlinePlayers().size() + "/" + plugin.getServer().getMaxPlayers() + ")**";
-                response += "\n```\n";
-                response += plugin.getServer().getOnlinePlayers().values()
-                        .stream()
-                        .map(Player::getName)
-                        .collect(Collectors.joining(", "));
-                if (response.length() > 1996) {
-                    response = response.substring(0, 1993) + "...";
-                }
-                response += "\n```";
-                plugin.sendDiscordMessage(response);
-            }
+        if (command != null && enabledCommands.contains(message)) {
+            command.execute(member, channel, message);
             return true;
         }
         return false;

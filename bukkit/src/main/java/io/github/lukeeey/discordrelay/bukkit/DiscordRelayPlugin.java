@@ -1,6 +1,9 @@
 package io.github.lukeeey.discordrelay.bukkit;
 
 import com.google.common.base.Preconditions;
+import io.github.lukeeey.discordrelay.bukkit.discord.DiscordChatListener;
+import io.github.lukeeey.discordrelay.bukkit.discord.DiscordCommand;
+import io.github.lukeeey.discordrelay.bukkit.discord.defaults.PlayerListCommand;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -12,8 +15,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.security.auth.login.LoginException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DiscordRelayPlugin extends JavaPlugin implements CommandExecutor {
+    private final Map<String, DiscordCommand> discordCommands = new HashMap<>();
+
     private JDA jda;
 
     @Getter
@@ -37,6 +44,9 @@ public class DiscordRelayPlugin extends JavaPlugin implements CommandExecutor {
 
         if (getConfig().getBoolean("relay.events.server-start.enabled")) {
             sendDiscordMessage(getConfig().getString("relay.events.server-start.message"));
+        }
+        if (getConfig().getStringList("enabled-discord-commands").contains("playerlist")) {
+            discordCommands.put("playerlist", new PlayerListCommand(this));
         }
     }
 
@@ -84,15 +94,33 @@ public class DiscordRelayPlugin extends JavaPlugin implements CommandExecutor {
                 .queue();
     }
 
-    public void sendDiscordMessage(String message) {
-        relayChannel.sendMessage(message).queue();
-    }
-
     public void broadcastMessage(String message) {
         if (getConfig().getBoolean("relay.discord-to-server.broadcast-to-console")) {
             getServer().broadcastMessage(message);
         } else {
             getServer().getOnlinePlayers().forEach(player -> player.sendMessage(message));
         }
+    }
+
+    /**
+     * Send a message to the Discord relay channel.
+     * @param message
+     */
+    public void sendDiscordMessage(String message) {
+        relayChannel.sendMessage(message).queue();
+    }
+
+    /**
+     * Register a command that can be executed in the Discord relay channel.
+     * The name should not contain the prefix as this is specified in the config.
+     *
+     * @param command
+     */
+    public void registerDiscordCommand(DiscordCommand command) {
+        discordCommands.put(command.getName(), command);
+    }
+
+    public DiscordCommand getDiscordCommand(String name) {
+        return discordCommands.get(name);
     }
 }

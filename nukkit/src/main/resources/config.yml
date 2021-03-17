@@ -87,9 +87,10 @@ discord-command-prefix: "!"
 
 
 # Enable or disable access to Discord commands provided by this plugin by adding or
-# removing entries from the list
+# removing entries from the list. Plugins can add their own commands by extending the DiscordCommand class,
+# and you can enable them by listing their names here.
 #
-# Current commands are: playerlist
+# Default commands provided by DiscordRelay are: playerlist
 enabled-discord-commands:
   - playerlist
 
