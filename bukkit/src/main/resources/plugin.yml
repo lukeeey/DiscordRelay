@@ -1,0 +1,11 @@
+name: DiscordRelay
+author: lukeeey
+description: Relay chat between Discord and a Minecraft server
+version: ${project.version}
+api-version: 1.13
+main: io.github.lukeeey.discordrelay.bukkit.DiscordRelayPlugin
+website: https://github.com/lukeeey/DiscordRelay
+commands:
+  discord:
+    description: Display Discord server link
+

@@ -1,0 +1,99 @@
+# ==============================================
+#    DiscordRelay by lukeeey
+#    https://github.com/lukeeey/DiscordRelay
+# ==============================================
+
+# Settings related to the Discord bot
+discord-bot:
+  # The token of the Discord bot
+  token: ""
+
+  # The ID of the Discord channel to relay messages between
+  channel-id: ""
+
+  # The topic of the Discord relay channel
+  # Placeholders: {onlinePlayers}, {maxPlayers}
+  channel-topic: "hypixel.net | Players online: {onlinePlayers}/{maxPlayers}"
+
+  # The interval at which the channel topic shall be updated
+  # In seconds, set to -1 to only set it on bot start
+  channel-topic-update-interval: 300
+
+  # The status of the bot
+  # Discord prefixes this with "Playing " so an example output would be "Playing on hypixel.net"
+  status: "on hypixel.net"
+
+
+# Relay settings for different types of messages.
+#
+# In-game events (join, quit and death) can have the default messages by specifying the
+# {default} placeholder.
+#
+# Discord markdown applies on the in-game events and server-to-discord sections as these messages
+# will be displayed in the Discord channel!
+relay:
+  server-to-discord:
+    enabled: true
+
+    # Placeholders: {timestamp}, {playerName}, {displayName}, {message}
+    format: "{playerName} » {message}"
+
+    # When sending chat from Minecraft to Discord, replace @ with [at]
+    # This prevents pinging people unnecessarily
+    replace-at: true
+
+    # Can server operators bypass the `replace-at` option above?
+    ops-bypass-role-ping-protection: true
+
+
+  discord-to-server:
+    enabled: true
+
+    # Minecraft colour codes can be used here!
+    # Placeholders: {discordRole}, {discordRoleColored}, {discordName}, {message}
+    format: "§f[§bDiscord §f| {discordRoleColored}§f] {discordName} » {message}"
+
+    # Display messages from Discord in console as well
+    broadcast-to-console: true
+
+    # Show messages sent by bots in-game
+    allow-bot-messages: false
+
+    # Discord messages exceeding this length will be truncated
+    max-message-length: 255
+
+
+  # Messages for specific server events!
+  events:
+    join:
+      enabled: true
+      message: "**:heavy_plus_sign: {playerName} joined the server**"
+    quit:
+      enabled: true
+      message: "**:heavy_minus_sign: {playerName} left the server**"
+    death:
+      enabled: true
+      message: "**:skull: {default}**"
+    server-start:
+      enabled: true
+      message: "**:white_check_mark: Server started!**"
+    server-stop:
+      enabled: true
+      message: "**:x: Server stopped!**"
+
+
+# The prefix for commands in Discord
+discord-command-prefix: "!"
+
+
+# Enable or disable access to Discord commands provided by this plugin by adding or
+# removing entries from the list
+#
+# Current commands are: playerlist
+enabled-discord-commands:
+  - playerlist
+
+
+# Enable the in-game Discord command on the server (/discord)
+ingame-discord-command-enabled: true
+ingame-discord-command-response: "Join our Discord server at §ehttps://discord.gg/myserver§f!"
