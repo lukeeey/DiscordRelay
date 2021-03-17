@@ -29,7 +29,7 @@
 
     <build>
         <defaultGoal>clean package</defaultGoal>
-        <finalName>${project.name}-${project.version}</finalName>
+        <finalName>${project.name}-Bukkit-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
