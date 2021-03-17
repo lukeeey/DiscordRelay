@@ -1,5 +1,6 @@
 # DiscordRelay
-![DiscordRelay](https://github.com/lukeeey/DiscordRelay/workflows/DiscordRelay/badge.svg)  
+![DiscordRelay](https://github.com/lukeeey/DiscordRelay/workflows/DiscordRelay/badge.svg)
+[![Discord](https://img.shields.io/discord/803794932820082739.svg?color=%237289da&label=Discord)](https://discord.gg/wXFFSkmANS)  
 A plugin for relaying chat between Discord and Minecraft.
 
 ## Features
