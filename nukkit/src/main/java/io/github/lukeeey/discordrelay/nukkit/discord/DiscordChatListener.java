@@ -29,12 +29,15 @@ public class DiscordChatListener extends ListenerAdapter {
         String name = TextFormat.clean(event.getMember().getEffectiveName()
                 .replace("§", "?")
                 .replace("{message}", "?"));
+        int maxMessageLength = plugin.getConfig().getInt("relay.discord-to-server.max-message-length");
 
         if (message.isEmpty()) return;
         if (handleCommands(event.getMember(), event.getChannel(), message)) return;
 
         if (!plugin.getConfig().getBoolean("relay.discord-to-server.enabled")) return;
-        if (message.length() > plugin.getConfig().getInt("relay.discord-to-server.max-message-length")) return;
+        if (message.length() > maxMessageLength) {
+            message = message.substring(0, maxMessageLength);
+        }
 
         Role highestRole = getHighestRole(event.getMember());
         String roleName = highestRole != null ? highestRole.getName() : "";
@@ -55,7 +58,7 @@ public class DiscordChatListener extends ListenerAdapter {
         List<String> enabledCommands = plugin.getConfig().getStringList("enabled-discord-commands");
         DiscordCommand command = plugin.getDiscordCommand(message.substring(1));
 
-        if (command != null && enabledCommands.contains(message)) {
+        if (message.startsWith(commandPrefix) && command != null && enabledCommands.contains(message.substring(1))) {
             command.execute(member, channel, message);
             return true;
         }

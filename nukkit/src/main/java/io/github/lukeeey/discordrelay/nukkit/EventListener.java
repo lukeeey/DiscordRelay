@@ -9,8 +9,9 @@ import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
 import cn.nukkit.utils.TextFormat;
 import lombok.RequiredArgsConstructor;
-
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class EventListener implements Listener {
@@ -18,26 +19,17 @@ public class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(PlayerJoinEvent event) {
-        if (plugin.getConfig().getBoolean("relay.events.join.enabled")) {
-            plugin.sendDiscordMessage(replaceCommonPlaceholders(plugin.getConfig().getString("relay.events.join.message"),
-                    event.getPlayer().getName(), event.getJoinMessage().getText()));
-        }
+        plugin.sendInternalDiscordEventMessage("join", commonPlaceholders(event.getPlayer().getName(), event.getJoinMessage().getText()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onQuit(PlayerQuitEvent event) {
-        if (plugin.getConfig().getBoolean("relay.events.quit.enabled")) {
-            plugin.sendDiscordMessage(replaceCommonPlaceholders(plugin.getConfig().getString("relay.events.quit.message"),
-                    event.getPlayer().getName(), event.getQuitMessage().getText()));
-        }
+        plugin.sendInternalDiscordEventMessage("quit", commonPlaceholders(event.getPlayer().getName(), event.getQuitMessage().getText()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDeath(PlayerDeathEvent event) {
-        if (plugin.getConfig().getBoolean("relay.events.death.enabled")) {
-            plugin.sendDiscordMessage(replaceCommonPlaceholders(plugin.getConfig().getString("relay.events.death.message"),
-                    event.getEntity().getName(), event.getDeathMessage().getText()));
-        }
+        plugin.sendInternalDiscordEventMessage("death", commonPlaceholders(event.getEntity().getName(), event.getDeathMessage().getText()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -61,8 +53,10 @@ public class EventListener implements Listener {
         }
     }
 
-    private String replaceCommonPlaceholders(String text, String playerName, String defaultMessage) {
-        return text.replace("{playerName}", playerName)
-                .replace("{default}", TextFormat.clean(defaultMessage));
+    private Map<String, String> commonPlaceholders(String playerName, String defaultMessage) {
+        Map<String, String> map = new HashMap<>();
+        map.put("{playerName}", playerName);
+        map.put("{default}", defaultMessage);
+        return map;
     }
 }

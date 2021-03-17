@@ -5,9 +5,11 @@ import io.github.lukeeey.discordrelay.bukkit.discord.DiscordChatListener;
 import io.github.lukeeey.discordrelay.bukkit.discord.DiscordCommand;
 import io.github.lukeeey.discordrelay.bukkit.discord.defaults.PlayerListCommand;
 import lombok.Getter;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,6 +17,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.security.auth.login.LoginException;
+import java.awt.*;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,28 +45,23 @@ public class DiscordRelayPlugin extends JavaPlugin implements CommandExecutor {
         } catch (LoginException | InterruptedException e) {
             e.printStackTrace();
         }
-
-        if (getConfig().getBoolean("relay.events.server-start.enabled")) {
-            sendDiscordMessage(getConfig().getString("relay.events.server-start.message"));
-        }
         if (getConfig().getStringList("enabled-discord-commands").contains("playerlist")) {
             discordCommands.put("playerlist", new PlayerListCommand(this));
         }
+        sendInternalDiscordEventMessage("server-start");
+    }
+
+    @Override
+    public void onDisable() {
+        sendInternalDiscordEventMessage("server-stop");
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("discord")) {
-            sender.sendMessage(getConfig().getString("ingame-discord-command-feedback"));
+            sender.sendMessage(getConfig().getString("ingame-discord-command-response"));
         }
         return true;
-    }
-
-    @Override
-    public void onDisable() {
-        if (getConfig().getBoolean("relay.events.server-stop.enabled")) {
-            sendDiscordMessage(getConfig().getString("relay.events.server-stop.message"));
-        }
     }
 
     private void initJDA() throws LoginException, InterruptedException {
@@ -102,24 +101,66 @@ public class DiscordRelayPlugin extends JavaPlugin implements CommandExecutor {
         }
     }
 
+    void sendInternalDiscordEventMessage(String configKey) {
+        sendInternalDiscordEventMessage(configKey, Collections.emptyMap());
+    }
+
+    void sendInternalDiscordEventMessage(String configKey, Map<String, String> placeholders) {
+        boolean enabled = getConfig().getBoolean("relay.events." + configKey + ".enabled");
+        if (enabled) {
+            String message = getConfig().getString("relay.events." + configKey + ".message");
+            boolean showEmbed = getConfig().getBoolean("relay.events." + configKey + ".embed");
+            String embedColor = getConfig().getString("relay.events." + configKey + ".embed-color");
+
+            for (Map.Entry<String, String> entry : placeholders.entrySet()) {
+                message = message.replace(entry.getKey(), entry.getValue());
+            }
+
+            if (showEmbed) {
+                sendDiscordMessage(new EmbedBuilder()
+                        .setTitle(message)
+                        .setColor(embedColor.isEmpty() || embedColor.equalsIgnoreCase("default") ? null : Color.decode(embedColor))
+                        .build());
+            } else {
+                sendDiscordMessage(message);
+            }
+        }
+    }
+
     /**
      * Send a message to the Discord relay channel.
-     * @param message
+     *
+     * @param message the message to send
      */
     public void sendDiscordMessage(String message) {
         relayChannel.sendMessage(message).queue();
     }
 
     /**
+     * Send an embed to the Discord relay channel.
+     *
+     * @param embed the embed to send
+     */
+    public void sendDiscordMessage(MessageEmbed embed) {
+        relayChannel.sendMessage(embed).queue();
+    }
+
+    /**
      * Register a command that can be executed in the Discord relay channel.
      * The name should not contain the prefix as this is specified in the config.
      *
-     * @param command
+     * @param command the discord command to register
      */
     public void registerDiscordCommand(DiscordCommand command) {
         discordCommands.put(command.getName(), command);
     }
 
+    /**
+     * Get a currently registered Discord command.
+     *
+     * @param name the name of the command
+     * @return the command class if present, else null
+     */
     public DiscordCommand getDiscordCommand(String name) {
         return discordCommands.get(name);
     }

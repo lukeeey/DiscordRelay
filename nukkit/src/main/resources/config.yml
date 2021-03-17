@@ -12,7 +12,7 @@ discord-bot:
   channel-id: ""
 
   # The topic of the Discord relay channel
-  # Placeholders: {onlinePlayers}, {maxPlayers}
+  # Placeholders: {onlinePlayers}, {maxPlayers}, {tps}
   channel-topic: "hypixel.net | Players online: {onlinePlayers}/{maxPlayers}"
 
   # The interval at which the channel topic shall be updated
@@ -64,22 +64,33 @@ relay:
 
 
   # Messages for specific server events!
+  # Discord markdown (including emoji codes like :skull:) can be used here!
   events:
     join:
       enabled: true
-      message: "**:heavy_plus_sign: {playerName} joined the server**"
+      message: "**{playerName} joined the server**"
+      embed: true
+      embed-color: "#008000"
     quit:
       enabled: true
-      message: "**:heavy_minus_sign: {playerName} left the server**"
+      message: "**{playerName} left the server**"
+      embed: true
+      embed-color: "#FF0000"
     death:
       enabled: true
       message: "**:skull: {default}**"
+      embed: true
+      embed-color: "#FF0000"
     server-start:
       enabled: true
       message: "**:white_check_mark: Server started!**"
+      embed: true
+      embed-color: default
     server-stop:
       enabled: true
       message: "**:x: Server stopped!**"
+      embed: true
+      embed-color: default
 
 
 # The prefix for commands in Discord
