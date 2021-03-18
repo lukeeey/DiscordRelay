@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.ChatColor;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -54,10 +55,12 @@ public class DiscordChatListener extends ListenerAdapter {
     private boolean handleCommands(Member member, TextChannel channel, String message) {
         String commandPrefix = plugin.getConfig().getString("discord-command-prefix");
         List<String> enabledCommands = plugin.getConfig().getStringList("enabled-discord-commands");
-        DiscordCommand command = plugin.getDiscordCommand(message.substring(1));
 
-        if (message.startsWith(commandPrefix) && command != null && enabledCommands.contains(message.substring(1))) {
-            command.execute(member, channel, message);
+        String[] args = message.substring(1).split(" ");
+        DiscordCommand command = plugin.getDiscordCommand(args[0]);
+
+        if (message.startsWith(commandPrefix) && command != null && enabledCommands.contains(command.getName())) {
+            command.execute(member, channel, Arrays.copyOfRange(args, 1, args.length));
             return true;
         }
         return false;

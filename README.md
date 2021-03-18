@@ -7,7 +7,7 @@ A plugin for relaying chat between Discord and Minecraft.
 * Display messages in Discord (optionally in embeds) for common events like player joins or deaths
 * Role ping protection from Minecraft
 * Simple Developer API for creating new Discord commands
-* Built-in `!playerlist` Discord command for seeing who's online
+* Built-in `!playerlist`, `!serverinfo` and `!playerinfo <name>` Discord commands!
 * Built-in `/discord` in-game command so players can see info about your Discord server  
 * Automatic updating of the relay channel topic in Discord!  
 ...and more!
@@ -17,7 +17,7 @@ And best of all, **everything is configurable!**
 ## TODO
 * Make use of PlaceholderAPI  
 * Allow the execution of commands from Discord  
-* Add more default Discord commands
+* Discord command aliases
 
 ## For Developers
 You can register your own Discord command and also send your own messages to the Discord relay channel.

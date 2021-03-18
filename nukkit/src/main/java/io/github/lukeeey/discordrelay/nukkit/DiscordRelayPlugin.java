@@ -7,7 +7,9 @@ import cn.nukkit.utils.TextFormat;
 import com.google.common.base.Preconditions;
 import io.github.lukeeey.discordrelay.nukkit.discord.DiscordChatListener;
 import io.github.lukeeey.discordrelay.nukkit.discord.DiscordCommand;
+import io.github.lukeeey.discordrelay.nukkit.discord.defaults.PlayerInfoCommand;
 import io.github.lukeeey.discordrelay.nukkit.discord.defaults.PlayerListCommand;
+import io.github.lukeeey.discordrelay.nukkit.discord.defaults.ServerInfoCommand;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -20,6 +22,7 @@ import javax.security.auth.login.LoginException;
 import java.awt.*;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DiscordRelayPlugin extends PluginBase {
@@ -42,9 +45,11 @@ public class DiscordRelayPlugin extends PluginBase {
         } catch (LoginException | InterruptedException e) {
             e.printStackTrace();
         }
-        if (getConfig().getStringList("enabled-discord-commands").contains("playerlist")) {
-            discordCommands.put("playerlist", new PlayerListCommand(this));
-        }
+
+        registerDiscordCommand(new PlayerListCommand(this));
+        registerDiscordCommand(new ServerInfoCommand(this));
+        registerDiscordCommand(new PlayerInfoCommand(this));
+
         sendInternalDiscordEventMessage("server-start");
     }
 
@@ -56,7 +61,7 @@ public class DiscordRelayPlugin extends PluginBase {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("discord") && getConfig().getBoolean("ingame-discord-command-enabled")) {
-            sender.sendMessage(getConfig().getString("ingame-discord-command-response"));
+            sender.sendMessage(TextFormat.colorize('&', getConfig().getString("ingame-discord-command-response")));
         }
         return true;
     }

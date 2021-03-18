@@ -17,5 +17,5 @@ public abstract class DiscordCommand {
         this.description = description;
     }
 
-    public abstract void execute(Member sender, TextChannel channel, String message);
+    public abstract void execute(Member sender, TextChannel channel, String[] args);
 }

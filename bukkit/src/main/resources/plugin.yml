@@ -9,4 +9,3 @@ website: https://github.com/lukeeey/DiscordRelay
 commands:
   discord:
     description: Display Discord server link
-

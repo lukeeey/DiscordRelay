@@ -101,9 +101,16 @@ discord-command-prefix: "!"
 # removing entries from the list. Plugins can add their own commands by extending the DiscordCommand class,
 # and you can enable them by listing their names here.
 #
-# Default commands provided by DiscordRelay are: playerlist
+# Default commands provided by DiscordRelay are: playerlist, serverinfo, playerinfo
 enabled-discord-commands:
   - playerlist
+  - serverinfo
+  - playerinfo
+
+
+# Whether or not to show "Requested by Tag#0001" in the footer of Discord embeds.
+# This is only used when a user executes a command on Discord.
+discord-embed-requested-by: true
 
 
 # Enable the in-game Discord command on the server (/discord)

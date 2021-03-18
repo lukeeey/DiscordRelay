@@ -17,7 +17,7 @@ public class PlayerListCommand extends DiscordCommand {
     }
 
     @Override
-    public void execute(Member sender, TextChannel channel, String message) {
+    public void execute(Member sender, TextChannel channel, String[] args) {
         if (plugin.getServer().getOnlinePlayers().isEmpty()) {
             plugin.sendDiscordMessage("**No online players**");
         } else {
