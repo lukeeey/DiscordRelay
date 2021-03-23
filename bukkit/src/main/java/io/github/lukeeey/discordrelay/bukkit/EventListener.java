@@ -47,12 +47,13 @@ public class EventListener implements Listener {
                 message = message.replace("@", "[at]");
             }
 
-            plugin.sendDiscordMessage(PlaceholderAPI.setPlaceholders(event.getPlayer(),
-                    ChatColor.stripColor(plugin.getConfig().getString("relay.server-to-discord.format")
-                            .replace("{timestamp}", new Date(System.currentTimeMillis()).toString())
-                            .replace("{playerName}", event.getPlayer().getName())
-                            .replace("{displayName}", event.getPlayer().getDisplayName())
-                            .replace("{message}", message))));
+            message = ChatColor.stripColor(message);
+            String response = plugin.placeholderApiSupport(event.getPlayer(), plugin.getConfig().getString("relay.server-to-discord.format"));
+
+            plugin.sendDiscordMessage(response.replace("{timestamp}", new Date(System.currentTimeMillis()).toString())
+                    .replace("{playerName}", event.getPlayer().getName())
+                    .replace("{displayName}", event.getPlayer().getDisplayName())
+                    .replace("{message}", message));
         }
     }
 

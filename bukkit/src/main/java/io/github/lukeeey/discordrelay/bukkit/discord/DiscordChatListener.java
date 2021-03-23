@@ -43,14 +43,13 @@ public class DiscordChatListener extends ListenerAdapter {
         String roleName = highestRole != null ? highestRole.getName() : "";
         String formattedRole = highestRole != null ? getFormattedRoleName(highestRole) : "";
 
-        String response = plugin.getConfig().getString("relay.discord-to-server.format")
-                .replace("{timestamp}", new Date(System.currentTimeMillis()).toString())
+        String response = plugin.placeholderApiSupport(null, plugin.getConfig().getString("relay.discord-to-server.format"));
+
+        plugin.broadcastMessage(response.replace("{timestamp}", new Date(System.currentTimeMillis()).toString())
                 .replace("{discordRole}", roleName)
                 .replace("{discordRoleColored}", formattedRole)
                 .replace("{discordName}", name)
-                .replace("{message}", message);
-
-        plugin.broadcastMessage(PlaceholderAPI.setPlaceholders(null, response));
+                .replace("{message}", message));
     }
 
     private boolean handleCommands(Member member, TextChannel channel, String message) {

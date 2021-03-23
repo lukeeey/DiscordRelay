@@ -46,6 +46,15 @@ public class DiscordRelayPlugin extends JavaPlugin implements CommandExecutor {
 
         getServer().getPluginManager().registerEvents(new EventListener(this), this);
 
+        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            getLogger().info("PlaceholderAPI detected, delaying to allow expansions to register before continuing");
+            getServer().getScheduler().runTaskLater(this, this::continueInit, 20);
+        } else {
+            continueInit();
+        }
+    }
+
+    private void continueInit() {
         try {
             initJDA();
         } catch (LoginException | InterruptedException e) {
@@ -67,8 +76,11 @@ public class DiscordRelayPlugin extends JavaPlugin implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("discord")) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    getConfig().getString("ingame-discord-command-response")));
+            Player player = sender instanceof Player ? (Player) sender : null;
+
+            sender.sendMessage(placeholderApiSupport(player,
+                    ChatColor.translateAlternateColorCodes('&',
+                            getConfig().getString("ingame-discord-command-response"))));
         }
         return true;
     }
@@ -129,7 +141,7 @@ public class DiscordRelayPlugin extends JavaPlugin implements CommandExecutor {
                 message = message.replace(entry.getKey(), entry.getValue());
             }
 
-            message = PlaceholderAPI.setPlaceholders(player, message);
+            message = placeholderApiSupport(player, message);
 
             if (showEmbed) {
                 sendDiscordMessage(new EmbedBuilder()
@@ -140,6 +152,14 @@ public class DiscordRelayPlugin extends JavaPlugin implements CommandExecutor {
                 sendDiscordMessage(message);
             }
         }
+    }
+
+    public String placeholderApiSupport(Player player, String message) {
+        String newMessage = message;
+        if (PlaceholderAPI.containsPlaceholders(message)) {
+            newMessage = PlaceholderAPI.setPlaceholders(player, message);
+        }
+        return newMessage;
     }
 
     /**
