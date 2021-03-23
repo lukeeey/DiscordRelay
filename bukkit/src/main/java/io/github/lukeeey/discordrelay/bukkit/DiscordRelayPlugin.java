@@ -93,7 +93,7 @@ public class DiscordRelayPlugin extends JavaPlugin implements CommandExecutor {
         relayChannel = Preconditions.checkNotNull(jda.getTextChannelById(getConfig().getString("discord-bot.channel-id")), "Relay channel cannot be found!");
 
         if (!getConfig().getString("discord-bot.status").isEmpty()) {
-            jda.getPresence().setActivity(Activity.playing(getConfig().getString("discord-bot.status")));
+            jda.getPresence().setActivity(Activity.playing(placeholderApiSupport(null, getConfig().getString("discord-bot.status"))));
         }
 
         if (!getConfig().getString("discord-bot.channel-topic").isEmpty()) {
@@ -108,10 +108,10 @@ public class DiscordRelayPlugin extends JavaPlugin implements CommandExecutor {
     }
 
     private void updateChannelTopic() {
-        relayChannel.getManager().setTopic(getConfig().getString("discord-bot.channel-topic")
-                .replace("{onlinePlayers}", String.valueOf(getServer().getOnlinePlayers().size()))
-                .replace("{maxPlayers}", String.valueOf(getServer().getMaxPlayers())))
-                .queue();
+        relayChannel.getManager().setTopic(placeholderApiSupport(null,
+                getConfig().getString("discord-bot.channel-topic")
+                        .replace("{onlinePlayers}", String.valueOf(getServer().getOnlinePlayers().size()))
+                        .replace("{maxPlayers}", String.valueOf(getServer().getMaxPlayers())))).queue();
     }
 
     public void broadcastMessage(String message) {
