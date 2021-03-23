@@ -1,6 +1,7 @@
 package io.github.lukeeey.discordrelay.bukkit;
 
 import lombok.RequiredArgsConstructor;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -20,17 +21,17 @@ public class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(PlayerJoinEvent event) {
-        plugin.sendInternalDiscordEventMessage("join", commonPlaceholders(event.getPlayer().getName(), event.getJoinMessage()));
+        plugin.sendInternalDiscordEventMessage("join", commonPlaceholders(event.getPlayer().getName(), event.getJoinMessage()), event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onQuit(PlayerQuitEvent event) {
-        plugin.sendInternalDiscordEventMessage("quit", commonPlaceholders(event.getPlayer().getName(), event.getQuitMessage()));
+        plugin.sendInternalDiscordEventMessage("quit", commonPlaceholders(event.getPlayer().getName(), event.getQuitMessage()), event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDeath(PlayerDeathEvent event) {
-        plugin.sendInternalDiscordEventMessage("death", commonPlaceholders(event.getEntity().getName(), event.getDeathMessage()));
+        plugin.sendInternalDiscordEventMessage("death", commonPlaceholders(event.getEntity().getName(), event.getDeathMessage()), event.getEntity());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -46,11 +47,12 @@ public class EventListener implements Listener {
                 message = message.replace("@", "[at]");
             }
 
-            plugin.sendDiscordMessage(ChatColor.stripColor(plugin.getConfig().getString("relay.server-to-discord.format")
-                    .replace("{timestamp}", new Date(System.currentTimeMillis()).toString())
-                    .replace("{playerName}", event.getPlayer().getName())
-                    .replace("{displayName}", event.getPlayer().getDisplayName())
-                    .replace("{message}", message)));
+            plugin.sendDiscordMessage(PlaceholderAPI.setPlaceholders(event.getPlayer(),
+                    ChatColor.stripColor(plugin.getConfig().getString("relay.server-to-discord.format")
+                            .replace("{timestamp}", new Date(System.currentTimeMillis()).toString())
+                            .replace("{playerName}", event.getPlayer().getName())
+                            .replace("{displayName}", event.getPlayer().getDisplayName())
+                            .replace("{message}", message))));
         }
     }
 

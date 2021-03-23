@@ -7,6 +7,7 @@ import io.github.lukeeey.discordrelay.bukkit.discord.defaults.PlayerInfoCommand;
 import io.github.lukeeey.discordrelay.bukkit.discord.defaults.PlayerListCommand;
 import io.github.lukeeey.discordrelay.bukkit.discord.defaults.ServerInfoCommand;
 import lombok.Getter;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -17,6 +18,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.security.auth.login.LoginException;
@@ -109,10 +111,14 @@ public class DiscordRelayPlugin extends JavaPlugin implements CommandExecutor {
     }
 
     void sendInternalDiscordEventMessage(String configKey) {
-        sendInternalDiscordEventMessage(configKey, Collections.emptyMap());
+        sendInternalDiscordEventMessage(configKey, null);
     }
 
-    void sendInternalDiscordEventMessage(String configKey, Map<String, String> placeholders) {
+    void sendInternalDiscordEventMessage(String configKey, Player player) {
+        sendInternalDiscordEventMessage(configKey, Collections.emptyMap(), player);
+    }
+
+    void sendInternalDiscordEventMessage(String configKey, Map<String, String> placeholders, Player player) {
         boolean enabled = getConfig().getBoolean("relay.events." + configKey + ".enabled");
         if (enabled) {
             String message = getConfig().getString("relay.events." + configKey + ".message");
@@ -122,6 +128,8 @@ public class DiscordRelayPlugin extends JavaPlugin implements CommandExecutor {
             for (Map.Entry<String, String> entry : placeholders.entrySet()) {
                 message = message.replace(entry.getKey(), entry.getValue());
             }
+
+            message = PlaceholderAPI.setPlaceholders(player, message);
 
             if (showEmbed) {
                 sendDiscordMessage(new EmbedBuilder()

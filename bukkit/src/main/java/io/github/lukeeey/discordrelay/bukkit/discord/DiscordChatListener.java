@@ -3,6 +3,7 @@ package io.github.lukeeey.discordrelay.bukkit.discord;
 import io.github.lukeeey.discordrelay.bukkit.DiscordRelayPlugin;
 import io.github.lukeeey.discordrelay.bukkit.util.TextFormatConverter;
 import lombok.RequiredArgsConstructor;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -49,7 +50,7 @@ public class DiscordChatListener extends ListenerAdapter {
                 .replace("{discordName}", name)
                 .replace("{message}", message);
 
-        plugin.broadcastMessage(response);
+        plugin.broadcastMessage(PlaceholderAPI.setPlaceholders(null, response));
     }
 
     private boolean handleCommands(Member member, TextChannel channel, String message) {
