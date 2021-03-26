@@ -22,10 +22,12 @@ import javax.security.auth.login.LoginException;
 import java.awt.*;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DiscordRelayPlugin extends PluginBase {
+    @Getter
+    private static DiscordRelayPlugin instance;
+
     @Getter
     private final Map<String, DiscordCommand> discordCommands = new HashMap<>();
 
@@ -36,6 +38,7 @@ public class DiscordRelayPlugin extends PluginBase {
 
     @Override
     public void onEnable() {
+        instance = this;
         saveDefaultConfig();
 
         getServer().getPluginManager().registerEvents(new EventListener(this), this);
@@ -51,6 +54,8 @@ public class DiscordRelayPlugin extends PluginBase {
         registerDiscordCommand(new PlayerInfoCommand(this));
 
         sendInternalDiscordEventMessage("server-start");
+
+        getLogger().info(TextFormat.BLUE + "DiscordRelay by lukeeey has been enabled!");
     }
 
     @Override
@@ -62,6 +67,12 @@ public class DiscordRelayPlugin extends PluginBase {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("discord") && getConfig().getBoolean("ingame-discord-command-enabled")) {
             sender.sendMessage(TextFormat.colorize('&', getConfig().getString("ingame-discord-command-response")));
+        }
+        if (command.getName().equalsIgnoreCase("discordrelay")) {
+            if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
+                reloadConfig();
+                sender.sendMessage(TextFormat.GREEN + "DiscordRelay config has been reloaded!");
+            }
         }
         return true;
     }

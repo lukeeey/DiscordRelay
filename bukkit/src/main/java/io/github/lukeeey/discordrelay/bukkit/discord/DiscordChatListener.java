@@ -46,9 +46,12 @@ public class DiscordChatListener extends ListenerAdapter {
         String response = plugin.placeholderApiSupport(null, plugin.getConfig().getString("relay.discord-to-server.format"));
 
         plugin.broadcastMessage(response.replace("{timestamp}", new Date(System.currentTimeMillis()).toString())
-                .replace("{discordRole}", roleName)
-                .replace("{discordRoleColored}", formattedRole)
-                .replace("{discordName}", name)
+                .replace("{discordUserRole}", roleName)
+                .replace("{discordUserRoleColored}", formattedRole)
+                .replace("{discordUserId}", event.getMember().getId())
+                .replace("{discordUserNickname}", event.getMember().getNickname() != null ? event.getMember().getNickname() : "")
+                .replace("{discordUserDiscriminator}", event.getMember().getUser().getDiscriminator())
+                .replace("{discordUserName}", name)
                 .replace("{message}", message));
     }
 

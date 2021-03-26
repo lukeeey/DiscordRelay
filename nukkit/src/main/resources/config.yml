@@ -50,8 +50,9 @@ relay:
     enabled: true
 
     # Minecraft colour codes can be used here!
-    # Placeholders: {discordRole}, {discordRoleColored}, {discordName}, {message}
-    format: "§f[§bDiscord §f| {discordRoleColored}§f] {discordName} » {message}"
+    # Placeholders: {discordUserRole}, {discordUserRoleColored}, {discordUserNickname}, {discordUserName},
+    #               {discordUserDiscriminator}, {message}
+    format: "§f[§bDiscord §f| {discordUserRoleColored}§f] {discordUserName} » {message}"
 
     # Display messages from Discord in console as well
     broadcast-to-console: true

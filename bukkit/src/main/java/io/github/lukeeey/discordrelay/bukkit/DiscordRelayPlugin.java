@@ -6,6 +6,7 @@ import io.github.lukeeey.discordrelay.bukkit.discord.DiscordCommand;
 import io.github.lukeeey.discordrelay.bukkit.discord.defaults.PlayerInfoCommand;
 import io.github.lukeeey.discordrelay.bukkit.discord.defaults.PlayerListCommand;
 import io.github.lukeeey.discordrelay.bukkit.discord.defaults.ServerInfoCommand;
+import io.github.lukeeey.discordrelay.bukkit.placeholders.DiscordPlaceholderHook;
 import lombok.Getter;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -29,6 +30,9 @@ import java.util.List;
 import java.util.Map;
 
 public class DiscordRelayPlugin extends JavaPlugin implements CommandExecutor {
+    @Getter
+    private static DiscordRelayPlugin instance;
+
     private final Map<String, DiscordCommand> discordCommands = new HashMap<>();
 
     private JDA jda;
@@ -38,6 +42,7 @@ public class DiscordRelayPlugin extends JavaPlugin implements CommandExecutor {
 
     @Override
     public void onEnable() {
+        instance = this;
         saveDefaultConfig();
 
         if (getConfig().getBoolean("ingame-discord-command-enabled")) {
@@ -48,6 +53,7 @@ public class DiscordRelayPlugin extends JavaPlugin implements CommandExecutor {
 
         if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             getLogger().info("PlaceholderAPI detected, delaying to allow expansions to register before continuing");
+            new DiscordPlaceholderHook().register();
             getServer().getScheduler().runTaskLater(this, this::continueInit, 20);
         } else {
             continueInit();
@@ -66,6 +72,8 @@ public class DiscordRelayPlugin extends JavaPlugin implements CommandExecutor {
         registerDiscordCommand(new PlayerInfoCommand(this));
 
         sendInternalDiscordEventMessage("server-start");
+
+        getLogger().info(ChatColor.BLUE + "DiscordRelay by lukeeey has been enabled!");
     }
 
     @Override
@@ -81,6 +89,12 @@ public class DiscordRelayPlugin extends JavaPlugin implements CommandExecutor {
             sender.sendMessage(placeholderApiSupport(player,
                     ChatColor.translateAlternateColorCodes('&',
                             getConfig().getString("ingame-discord-command-response"))));
+        }
+        if (command.getName().equalsIgnoreCase("discordrelay")) {
+            if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
+                reloadConfig();
+                sender.sendMessage(ChatColor.GREEN + "DiscordRelay config has been reloaded!");
+            }
         }
         return true;
     }

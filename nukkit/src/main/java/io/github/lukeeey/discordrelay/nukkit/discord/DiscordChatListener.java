@@ -44,14 +44,16 @@ public class DiscordChatListener extends ListenerAdapter {
         String roleName = highestRole != null ? highestRole.getName() : "";
         String formattedRole = highestRole != null ? getFormattedRoleName(highestRole) : "";
 
-        String response = plugin.getConfig().getString("relay.discord-to-server.format")
-                .replace("{timestamp}", new Date(System.currentTimeMillis()).toString())
-                .replace("{discordRole}", roleName)
-                .replace("{discordRoleColored}", formattedRole)
-                .replace("{discordName}", name)
-                .replace("{message}", message);
+        String response = plugin.getConfig().getString("relay.discord-to-server.format");
 
-        plugin.broadcastMessage(response);
+        plugin.broadcastMessage(response.replace("{timestamp}", new Date(System.currentTimeMillis()).toString())
+                .replace("{discordUserRole}", roleName)
+                .replace("{discordUserRoleColored}", formattedRole)
+                .replace("{discordUserId}", event.getMember().getId())
+                .replace("{discordUserNickname}", event.getMember().getNickname() != null ? event.getMember().getNickname() : "")
+                .replace("{discordUserDiscriminator}", event.getMember().getUser().getDiscriminator())
+                .replace("{discordUserName}", name)
+                .replace("{message}", message));
     }
 
     private boolean handleCommands(Member member, TextChannel channel, String message) {

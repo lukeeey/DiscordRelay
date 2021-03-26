@@ -7,5 +7,11 @@ main: io.github.lukeeey.discordrelay.bukkit.DiscordRelayPlugin
 softdepend: [PlaceholderAPI]
 website: https://github.com/lukeeey/DiscordRelay
 commands:
+  discordrelay:
+    aliases: [drelay]
+    usage: /drelay reload
+    permission: drelay.reload
   discord:
     description: Display Discord server link
+permissions:
+  drelay.reload: op

@@ -6,5 +6,11 @@ api: [1.0.5]
 main: io.github.lukeeey.discordrelay.nukkit.DiscordRelayPlugin
 website: https://github.com/lukeeey/DiscordRelay
 commands:
+  discordrelay:
+    aliases: [drelay]
+    usage: /drelay reload
+    permission: drelay.reload
   discord:
     description: Display Discord server link
+permissions:
+  drelay.reload: op
