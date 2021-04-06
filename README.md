@@ -17,9 +17,7 @@ A plugin for relaying chat between Discord and Minecraft.
 And best of all, **everything is configurable!**
 
 ## TODO
-* Make use of PlaceholderAPI  
-* Allow the execution of commands from Discord  
-* Discord command aliases
+* Allow the execution of Minecraft commands from Discord  
 
 ## For Developers
 You can register your own Discord command and also send your own messages to the Discord relay channel.
