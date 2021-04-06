@@ -79,6 +79,7 @@ public class DiscordRelayPlugin extends JavaPlugin implements CommandExecutor {
     @Override
     public void onDisable() {
         sendInternalDiscordEventMessage("server-stop");
+        jda.shutdown();
     }
 
     @Override

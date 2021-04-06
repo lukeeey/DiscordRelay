@@ -61,6 +61,7 @@ public class DiscordRelayPlugin extends PluginBase {
     @Override
     public void onDisable() {
         sendInternalDiscordEventMessage("server-stop");
+        jda.shutdown();
     }
 
     @Override

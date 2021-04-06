@@ -14,4 +14,6 @@ commands:
   discord:
     description: Display Discord server link
 permissions:
-  drelay.reload: op
+  drelay.reload:
+    description: Allows the player to reload the config
+    default: op
