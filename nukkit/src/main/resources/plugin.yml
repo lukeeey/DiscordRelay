@@ -3,7 +3,7 @@ author: lukeeey
 description: Relay chat between Discord and a Minecraft server
 version: ${project.version}
 api: [1.0.5]
-main: io.github.lukeeey.discordrelay.nukkit.DiscordRelayPlugin
+main: dev.lukeeey.discordrelay.nukkit.DiscordRelayNukkit
 website: https://github.com/lukeeey/DiscordRelay
 commands:
   discordrelay:

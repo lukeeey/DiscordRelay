@@ -1,0 +1,62 @@
+package dev.lukeeey.discordrelay.nukkit;
+
+import cn.nukkit.command.Command;
+import cn.nukkit.command.CommandSender;
+import cn.nukkit.plugin.PluginBase;
+import cn.nukkit.utils.TextFormat;
+import dev.lukeeey.discordrelay.DiscordRelayPlatform;
+import lombok.Getter;
+
+import javax.security.auth.login.LoginException;
+
+public class DiscordRelayNukkit extends PluginBase {
+    @Getter
+    private static DiscordRelayNukkit instance;
+
+    @Getter
+    private DiscordRelayPlatform platform;
+
+    @Override
+    public void onEnable() {
+        instance = this;
+        saveDefaultConfig();
+
+        platform = new DiscordRelayPlatform(new DiscordRelayNukkitAdapter(this));
+
+        getServer().getPluginManager().registerEvents(new EventListener(this), this);
+
+        try {
+            platform.initJDA();
+        } catch (LoginException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        platform.registerCommands();
+        platform.sendInternalDiscordEventMessage("server-start");
+
+        getLogger().info(TextFormat.BLUE + "DiscordRelay by lukeeey has been enabled!");
+    }
+
+    @Override
+    public void onDisable() {
+        platform.sendInternalDiscordEventMessage("server-stop");
+
+        if (platform.getJda() != null) {
+            platform.getJda().shutdown();
+        }
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (command.getName().equalsIgnoreCase("discord") && getConfig().getBoolean("ingame-discord-command-enabled")) {
+            sender.sendMessage(TextFormat.colorize('&', getConfig().getString("ingame-discord-command-response")));
+        }
+        if (command.getName().equalsIgnoreCase("discordrelay")) {
+            if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
+                reloadConfig();
+                sender.sendMessage(TextFormat.GREEN + "DiscordRelay config has been reloaded!");
+            }
+        }
+        return true;
+    }
+}

@@ -4,20 +4,30 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.lukeeey</groupId>
-    <artifactId>DiscordRelay</artifactId>
+    <groupId>dev.lukeeey.discordrelay</groupId>
+    <artifactId>discordrelay-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
 
     <modules>
+        <module>core</module>
         <module>nukkit</module>
         <module>bukkit</module>
     </modules>
 
     <repositories>
         <repository>
-            <id>opencollab-repo</id>
-            <url>https://repo.opencollab.dev/snapshot/</url>
+            <id>opencollab-snapshot-repo</id>
+            <url>https://repo.opencollab.dev/maven-snapshots/</url>
+        </repository>
+        <repository>
+            <id>opencollab-release-repo</id>
+            <url>https://repo.opencollab.dev/maven-releases/</url>
+        </repository>
+        <repository>
+            <id>dv8tion</id>
+            <name>m2-dv8tion</name>
+            <url>https://m2.dv8tion.net/releases</url>
         </repository>
     </repositories>
 
@@ -25,13 +35,13 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
+            <version>1.18.34</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>4.2.0_168</version>
+            <version>6.0.0-rc.2</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
