@@ -12,12 +12,15 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.internal.utils.JDALogger;
 
 import javax.security.auth.login.LoginException;
 import java.awt.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Handler;
+import java.util.logging.LogManager;
 
 public class DiscordRelayPlatform {
     @Getter
@@ -42,8 +45,29 @@ public class DiscordRelayPlatform {
         registerDiscordCommand(new PlayerInfoCommand(this));
     }
 
-    public void initJDA() throws LoginException, InterruptedException {
-        jda = JDABuilder.createDefault(adapter.getConfigString("discord-bot.token"))
+    public boolean initJDA() throws LoginException, InterruptedException {
+        String token = adapter.getConfigString("discord-bot.token");
+        String channelId = adapter.getConfigString("discord-bot.channel-id");
+
+        if (token == null || token.isEmpty()) {
+            adapter.logError("You must set the Bot token in the config");
+            return false;
+        }
+        if (channelId == null || channelId.isEmpty()) {
+            adapter.logError("You must set the relay channel ID in the config");
+            return false;
+        }
+
+        java.util.logging.Logger rootLogger = LogManager.getLogManager().getLogger("");
+        for (Handler handler : rootLogger.getHandlers()) {
+            rootLogger.removeHandler(handler);
+        }
+
+        rootLogger.addHandler(new JDALogHandler(this));
+
+        JDALogger.setFallbackLoggerEnabled(false);
+
+        jda = JDABuilder.createDefault(token)
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
                 .setStatus(OnlineStatus.ONLINE)
                 .addEventListeners(new DiscordChatListener(this))
@@ -52,16 +76,18 @@ public class DiscordRelayPlatform {
 
         jda.awaitReady();
 
-        relayChannel = jda.getTextChannelById(adapter.getConfigString("discord-bot.channel-id"));
+        relayChannel = jda.getTextChannelById(channelId);
 
-        if (!adapter.getConfigString("discord-bot.status").isEmpty()) {
+        String botStatus = adapter.getConfigString("discord-bot.status");
+        if (botStatus != null && !botStatus.isEmpty()) {
             String status = adapter.placeholderApiSupport(adapter.getConfigString("discord-bot.status"));
-            Activity.ActivityType statusType = Activity.ActivityType.valueOf(adapter.getConfigString("discord-bot.status-type").toUpperCase());
+            Activity.ActivityType statusType = Activity.ActivityType.valueOf(adapter.getConfigString("discord-bot.status-type", "PLAYING").toUpperCase());
             jda.getPresence().setActivity(Activity.of(statusType, status));
         }
 
-        if (!adapter.getConfigString("discord-bot.channel-topic").isEmpty()) {
-            int interval = adapter.getConfigInt("discord-bot.channel-topic-update-interval");
+        String channelTopic = adapter.getConfigString("discord-bot.channel-topic");
+        if (channelTopic != null && !channelTopic.isEmpty()) {
+            int interval = adapter.getConfigInt("discord-bot.channel-topic-update-interval", 60);
 
             if (interval == -1) {
                 updateChannelTopic();
@@ -69,6 +95,7 @@ public class DiscordRelayPlatform {
                 adapter.scheduleRepeatingTask(this::updateChannelTopic, 20 * interval);
             }
         }
+        return true;
     }
 
     private void updateChannelTopic() {

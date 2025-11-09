@@ -34,8 +34,8 @@ public class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onChat(PlayerChatEvent event) {
-        boolean enabled = plugin.getConfig().getBoolean("relay.server-to-discord.enabled");
-        boolean replaceAt = plugin.getConfig().getBoolean("relay.server-to-discord.replace-at");
+        boolean enabled = plugin.getConfig().getBoolean("relay.server-to-discord.enabled", true);
+        boolean replaceAt = plugin.getConfig().getBoolean("relay.server-to-discord.replace-at", true);
         boolean bypassReplaceAt = event.getPlayer().hasPermission("drelay.allowrolepings");
         boolean canSend = event.getPlayer().hasPermission("drelay.sendtodiscord");
 

@@ -32,13 +32,13 @@ Some features are only available for Java Edition servers.
 And best of all, **everything is configurable!**
 
 ## Permissions
-|Permission|Default|Description|
-|----------|-------|-----------|
-|`drelay.reload`|`op`|Allow using the `/drelay reload` command to reload the config|
-|`drelay.restart`|`op`|Allow using the `/drelay restart` command to restart the bot|
-|`drelay.allowrolepings`|`op`|Allow the player to ping users/roles by typing e.g. `<@382274626269307392>`|
-|`drelay.sendtodiscord`|`everyone`|The players chat messages will be sent to Discord|
-|`drelay.receivefromdiscord`|`everyone`|The player will see messages sent from Discord|
+| Permission                  | Default    | Description                                                                 |
+|-----------------------------|------------|-----------------------------------------------------------------------------|
+| `drelay.reload`             | `op`       | Allow using the `/drelay reload` command to reload the config               |
+| `drelay.restart`            | `op`       | Allow using the `/drelay restart` command to restart the bot                |
+| `drelay.allowrolepings`     | `op`       | Allow the player to ping users/roles by typing e.g. `<@382274626269307392>` |
+| `drelay.sendtodiscord`      | `everyone` | The players chat messages will be sent to Discord                           |
+| `drelay.receivefromdiscord` | `everyone` | The player will see messages sent from Discord                              |
 
 ## Plugin Setup
 1. Create a new application [here](https://discord.com/developers/applications)

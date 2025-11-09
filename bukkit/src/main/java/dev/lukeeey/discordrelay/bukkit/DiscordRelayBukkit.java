@@ -50,9 +50,15 @@ public class DiscordRelayBukkit extends JavaPlugin implements CommandExecutor {
 
     private void continueInit() {
         try {
-            platform.initJDA();
+            boolean loaded = platform.initJDA();
+
+            if (!loaded) {
+                getPluginLoader().disablePlugin(this);
+                return;
+            }
         } catch (LoginException | InterruptedException ex) {
             ex.printStackTrace();
+            return;
         }
 
         platform.registerCommands();
@@ -86,6 +92,10 @@ public class DiscordRelayBukkit extends JavaPlugin implements CommandExecutor {
                             getConfig().getString("ingame-discord-command-response")), player));
         }
         if (command.getName().equalsIgnoreCase("discordrelay")) {
+            if (args.length == 0) {
+                sender.sendMessage("/drelay [restart|reload]");
+                return true;
+            }
             switch (args[0].toLowerCase()) {
                 case "reload":
                     if (sender.hasPermission("drelay.reload")) {

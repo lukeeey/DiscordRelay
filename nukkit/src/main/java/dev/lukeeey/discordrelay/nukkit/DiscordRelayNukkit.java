@@ -26,9 +26,15 @@ public class DiscordRelayNukkit extends PluginBase {
         getServer().getPluginManager().registerEvents(new EventListener(this), this);
 
         try {
-            platform.initJDA();
+            boolean loaded = platform.initJDA();
+
+            if (!loaded) {
+                getPluginLoader().disablePlugin(this);
+                return;
+            }
         } catch (LoginException | InterruptedException e) {
             e.printStackTrace();
+            return;
         }
 
         platform.registerCommands();
@@ -48,10 +54,14 @@ public class DiscordRelayNukkit extends PluginBase {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("discord") && getConfig().getBoolean("ingame-discord-command-enabled")) {
+        if (command.getName().equalsIgnoreCase("discord") && getConfig().getBoolean("ingame-discord-command-enabled", true)) {
             sender.sendMessage(TextFormat.colorize('&', getConfig().getString("ingame-discord-command-response")));
         }
         if (command.getName().equalsIgnoreCase("discordrelay")) {
+            if (args.length == 0) {
+                sender.sendMessage("/drelay [restart|reload]");
+                return true;
+            }
             switch (args[0].toLowerCase()) {
                 case "reload":
                     if (sender.hasPermission("drelay.reload")) {

@@ -19,4 +19,7 @@ public interface IDiscordRelayAdapter {
     void scheduleRepeatingTask(Runnable task, int interval);
     String placeholderApiSupport(String message);
     String placeholderApiSupport(String message, Object playerObject);
+    void logError(String message);
+    void logInfo(String message);
+    void logWarning(String message);
 }

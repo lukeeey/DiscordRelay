@@ -73,8 +73,6 @@ public class DiscordPlaceholderHook extends PlaceholderExpansion {
                 return relayChannel.getGuild().getOwner().getNickname();
             case "guild_owner_effective_name":
                 return relayChannel.getGuild().getOwner().getEffectiveName();
-            case "guild_owner_discriminator":
-                return relayChannel.getGuild().getOwner().getUser().getDiscriminator();
         }
         return "";
     }

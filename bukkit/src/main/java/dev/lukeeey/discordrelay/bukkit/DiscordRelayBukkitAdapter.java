@@ -117,4 +117,19 @@ public class DiscordRelayBukkitAdapter implements IDiscordRelayAdapter {
         }
         return message;
     }
+
+    @Override
+    public void logError(String message) {
+        plugin.getLogger().severe(message);
+    }
+
+    @Override
+    public void logInfo(String message) {
+        plugin.getLogger().info(message);
+    }
+
+    @Override
+    public void logWarning(String message) {
+        plugin.getLogger().warning(message);
+    }
 }

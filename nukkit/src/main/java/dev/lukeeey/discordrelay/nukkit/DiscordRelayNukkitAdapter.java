@@ -107,4 +107,19 @@ public class DiscordRelayNukkitAdapter implements IDiscordRelayAdapter {
     public String placeholderApiSupport(String message, Object playerObject) {
         return message;
     }
+
+    @Override
+    public void logError(String message) {
+        plugin.getLogger().error(message);
+    }
+
+    @Override
+    public void logInfo(String message) {
+        plugin.getLogger().info(message);
+    }
+
+    @Override
+    public void logWarning(String message) {
+        plugin.getLogger().warning(message);
+    }
 }
