@@ -9,11 +9,17 @@ website: https://github.com/lukeeey/DiscordRelay
 commands:
   discordrelay:
     aliases: [drelay]
-    usage: /drelay reload
-    permission: drelay.reload
+    usage: /drelay [reload|restart]
   discord:
     description: Display Discord server link
 permissions:
-  drelay.reload:
-    description: Allows the player to reload the config
+  drelay.allowrolepings:
     default: op
+  drelay.reload:
+    default: op
+  drelay.restart:
+    default: op
+  drelay.sendtodiscord:
+    default: true
+  drelay.receivefromdiscord:
+    default: true

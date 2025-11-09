@@ -37,12 +37,13 @@ public class EventListener implements Listener {
     public void onChat(AsyncPlayerChatEvent event) {
         boolean enabled = plugin.getConfig().getBoolean("relay.server-to-discord.enabled");
         boolean replaceAt = plugin.getConfig().getBoolean("relay.server-to-discord.replace-at");
-        boolean opsBypassReplaceAt = plugin.getConfig().getBoolean("relay.server-to-discord.ops-bypass-role-ping-protection");
+        boolean bypassReplaceAt = event.getPlayer().hasPermission("drelay.allowrolepings");
+        boolean canSend = event.getPlayer().hasPermission("drelay.sendtodiscord");
 
-        if (enabled) {
+        if (enabled && canSend) {
             String message = event.getMessage();
 
-            if (replaceAt && (!opsBypassReplaceAt || !event.getPlayer().isOp())) {
+            if (replaceAt && !bypassReplaceAt) {
                 message = message.replace("@", "[at]");
             }
 

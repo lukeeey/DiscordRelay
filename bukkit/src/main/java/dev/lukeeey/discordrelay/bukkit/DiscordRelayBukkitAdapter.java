@@ -57,10 +57,15 @@ public class DiscordRelayBukkitAdapter implements IDiscordRelayAdapter {
 
     @Override
     public void broadcastMessage(String message) {
-        if (plugin.getConfig().getBoolean("relay.discord-to-server.broadcast-to-console")) {
-            plugin.getServer().broadcastMessage(message);
-        } else {
-            plugin.getServer().getOnlinePlayers().forEach(player -> player.sendMessage(message));
+        boolean broadcastToConsole = getConfigBoolean("relay.discord-to-server.broadcast-to-console");
+
+        for (Player player : plugin.getServer().getOnlinePlayers()) {
+            if (player.hasPermission("drelay.receivefromdiscord")) {
+                player.sendMessage(message);
+            }
+            if (broadcastToConsole) {
+                plugin.getServer().getLogger().info(message);
+            }
         }
     }
 

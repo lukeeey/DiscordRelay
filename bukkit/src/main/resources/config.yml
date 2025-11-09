@@ -17,10 +17,10 @@ discord-bot:
 
   # The interval at which the channel topic shall be updated
   # In seconds, set to -1 to only set it on bot start
-  channel-topic-update-interval: 300
+  channel-topic-update-interval: 60
 
   # The status of the bot
-  # Discord prefixes this with "Playing " so an example output would be "Playing on hypixel.net"
+  # Discord prefixes this so an example output would be "Playing on hypixel.net" or "Streaming on hypixel.net"
   status: "on hypixel.net"
 
   # What type of status should be shown?
@@ -45,9 +45,6 @@ relay:
     # When sending chat from Minecraft to Discord, replace @ with [at]
     # This prevents pinging people unnecessarily
     replace-at: true
-
-    # Can server operators bypass the `replace-at` option above?
-    ops-bypass-role-ping-protection: true
 
 
   discord-to-server:
@@ -116,7 +113,7 @@ enabled-discord-commands:
   - avatar
 
 
-# Whether or not to show "Requested by Tag#0001" in the footer of Discord embeds.
+# Whether or not to show "Requested by (username)" in the footer of Discord embeds.
 # This is only used when a user executes a command on Discord.
 discord-embed-requested-by: true
 

@@ -31,6 +31,15 @@ Some features are only available for Java Edition servers.
   
 And best of all, **everything is configurable!**
 
+## Permissions
+|Permission|Default|Description|
+|----------|-------|-----------|
+|`drelay.reload`|`op`|Allow using the `/drelay reload` command to reload the config|
+|`drelay.restart`|`op`|Allow using the `/drelay restart` command to restart the bot|
+|`drelay.allowrolepings`|`op`|Allow the player to ping users/roles by typing e.g. `<@382274626269307392>`|
+|`drelay.sendtodiscord`|`everyone`|The players chat messages will be sent to Discord|
+|`drelay.receivefromdiscord`|`everyone`|The player will see messages sent from Discord|
+
 ## For Developers
 You can register your own Discord command and also send your own messages to the Discord relay channel.
 
