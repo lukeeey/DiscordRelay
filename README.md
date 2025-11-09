@@ -40,6 +40,25 @@ And best of all, **everything is configurable!**
 |`drelay.sendtodiscord`|`everyone`|The players chat messages will be sent to Discord|
 |`drelay.receivefromdiscord`|`everyone`|The player will see messages sent from Discord|
 
+## Plugin Setup
+1. Create a new application [here](https://discord.com/developers/applications)
+2. Navigate to the "Bot" tab on the left side and press "Add Bot"
+3. Press "Click to Reveal" and copy the token to your config.yml file
+4. Go to the following page and click "Authorize"
+```
+https://discord.com/oauth2/authorize?client_id=YOUR-CLIENT-ID-HERE&permissions=11264&scope=bot
+```
+(Make sure to replace YOUR-CLIENT-ID-HERE with your "Application ID" which can be found on the General Information tab)
+
+5. Ensure "Message Content Intent" is ticked
+![image](https://i.imgur.com/H2Slkdy.png)
+5. Enable developer mode in Discord by going to settings then the "Advanced" tab
+6. Right-click the channel you would like to be used for relaying chat and select "Copy ID"
+7. Paste the copied ID into your config.yml file
+8. Make sure the bot has permissions to send and receive messages
+
+It may look a bit daunting but it's actually quite easy!
+
 ## For Developers
 You can register your own Discord command and also send your own messages to the Discord relay channel.
 
