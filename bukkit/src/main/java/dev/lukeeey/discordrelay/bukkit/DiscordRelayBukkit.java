@@ -2,6 +2,9 @@ package dev.lukeeey.discordrelay.bukkit;
 
 import dev.lukeeey.discordrelay.DiscordRelayPlatform;
 import dev.lukeeey.discordrelay.bukkit.placeholders.DiscordPlaceholderHook;
+import dev.lukeeey.discordrelay.bukkit.discord.AvatarCommand;
+import dev.lukeeey.discordrelay.bukkit.discord.CapeCommand;
+import dev.lukeeey.discordrelay.bukkit.discord.SkinCommand;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -53,6 +56,12 @@ public class DiscordRelayBukkit extends JavaPlugin implements CommandExecutor {
         }
 
         platform.registerCommands();
+
+        // Register Bukkit exclusive commands
+        platform.registerDiscordCommand(new SkinCommand(platform));
+        platform.registerDiscordCommand(new CapeCommand(platform));
+        platform.registerDiscordCommand(new AvatarCommand(platform));
+
         platform.sendInternalDiscordEventMessage("server-start");
 
         getLogger().info(ChatColor.BLUE + "DiscordRelay by lukeeey has been enabled!");
@@ -77,9 +86,23 @@ public class DiscordRelayBukkit extends JavaPlugin implements CommandExecutor {
                             getConfig().getString("ingame-discord-command-response")), player));
         }
         if (command.getName().equalsIgnoreCase("discordrelay")) {
-            if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
-                reloadConfig();
-                sender.sendMessage(ChatColor.GREEN + "DiscordRelay config has been reloaded!");
+            switch (args[0].toLowerCase()) {
+                case "reload":
+                    reloadConfig();
+                    sender.sendMessage(ChatColor.GREEN + "DiscordRelay config has been reloaded!");
+                    break;
+                case "restart":
+                    sender.sendMessage(ChatColor.YELLOW + "Shutting down the bot...");
+                    platform.getJda().shutdownNow();
+
+                    sender.sendMessage(ChatColor.YELLOW + "Starting the bot...");
+                    try {
+                        platform.initJDA();
+                        sender.sendMessage(ChatColor.GREEN + "The bot has successfully been restarted!");
+                    } catch (LoginException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    break;
             }
         }
         return true;

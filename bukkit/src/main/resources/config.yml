@@ -23,6 +23,10 @@ discord-bot:
   # Discord prefixes this with "Playing " so an example output would be "Playing on hypixel.net"
   status: "on hypixel.net"
 
+  # What type of status should be shown?
+  # Can either be PLAYING, STREAMING or LISTENING
+  status-type: PLAYING
+
 
 # Relay settings for different types of messages.
 #
@@ -102,11 +106,14 @@ discord-command-prefix: "!"
 # removing entries from the list. Plugins can add their own commands by extending the DiscordCommand class,
 # and you can enable them by listing their names here.
 #
-# Default commands provided by DiscordRelay are: playerlist, serverinfo, playerinfo
+# Default commands provided by DiscordRelay are: playerlist, serverinfo, playerinfo, skin, cape, avatar
 enabled-discord-commands:
   - playerlist
   - serverinfo
   - playerinfo
+  - skin
+  - cape
+  - avatar
 
 
 # Whether or not to show "Requested by Tag#0001" in the footer of Discord embeds.

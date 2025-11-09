@@ -23,6 +23,10 @@ discord-bot:
   # Discord prefixes this with "Playing " so an example output would be "Playing on hypixel.net"
   status: "on hypixel.net"
 
+  # What type of status should be shown?
+  # Can either be PLAYING, STREAMING or LISTENING
+  status-type: PLAYING
+
 
 # Relay settings for different types of messages.
 #
@@ -109,7 +113,7 @@ enabled-discord-commands:
   - playerinfo
 
 
-# Whether or not to show "Requested by Tag#0001" in the footer of Discord embeds.
+# Whether or not to show "Requested by (username)" in the footer of Discord embeds.
 # This is only used when a user executes a command on Discord.
 discord-embed-requested-by: true
 

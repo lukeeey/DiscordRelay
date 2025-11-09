@@ -9,15 +9,27 @@ A plugin for relaying chat between Discord and Minecraft.
 * Display messages in Discord (optionally in embeds) for common events like player joins or deaths
 * Role ping protection from Minecraft
 * Simple Developer API for creating new Discord commands
-* Built-in `!playerlist`, `!serverinfo` and `!playerinfo <name>` Discord commands!
+* Built-in Discord commands:
+  * `!playerlist`
+  * `!serverinfo`
+  * `!playerinfo <player name>`
 * Built-in `/discord` in-game command so players can see info about your Discord server  
 * Automatic updating of the relay channel topic in Discord!  
+* Change the bot's status type between `Playing`, `Streaming` and `Listening`
+* Restart the bot with `/drelay restart` without restarting the server
+* Reload the config with `/drelay reload`
 ...and more!
+
+### Bukkit Only Features
+Some features are only available for Java Edition servers.
+
+* PlaceholderAPI support
+* Additional built-in Discord commands:
+  * `!cape <player name>`
+  * `!skin <player name>`
+  * `!avatar <player name>`
   
 And best of all, **everything is configurable!**
-
-## TODO
-* Allow the execution of Minecraft commands from Discord  
 
 ## For Developers
 You can register your own Discord command and also send your own messages to the Discord relay channel.
@@ -37,9 +49,16 @@ public class HelloWorldCommand extends DiscordCommand {
 }
 ```
 In your `onEnable` simply add something like
+##### Bukkit (Java)
 ```java
-DiscordRelayPlugin discordRelay = getServer().getPluginManager().getPlugin("DiscordRelay");
-discordRelay.registerDiscordCommand(new HelloWorldCommand());
+DiscordRelayBukkit discordRelay = getServer().getPluginManager().getPlugin("DiscordRelay");
+discordRelay.getAdapter().registerDiscordCommand(new HelloWorldCommand());
+```
+
+##### Nukkit (Bedrock)
+```java
+DiscordRelayNukkit discordRelay = getServer().getPluginManager().getPlugin("DiscordRelay");
+discordRelay.getAdapter().registerDiscordCommand(new HelloWorldCommand());
 ```
 When typing `!helloworld` the bot will send a message saying `Hello, world!`
 

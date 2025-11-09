@@ -52,9 +52,23 @@ public class DiscordRelayNukkit extends PluginBase {
             sender.sendMessage(TextFormat.colorize('&', getConfig().getString("ingame-discord-command-response")));
         }
         if (command.getName().equalsIgnoreCase("discordrelay")) {
-            if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
-                reloadConfig();
-                sender.sendMessage(TextFormat.GREEN + "DiscordRelay config has been reloaded!");
+            switch (args[0].toLowerCase()) {
+                case "reload":
+                    reloadConfig();
+                    sender.sendMessage(TextFormat.GREEN + "DiscordRelay config has been reloaded!");
+                    break;
+                case "restart":
+                    sender.sendMessage(TextFormat.YELLOW + "Shutting down the bot...");
+                    platform.getJda().shutdownNow();
+
+                    sender.sendMessage(TextFormat.YELLOW + "Starting the bot...");
+                    try {
+                        platform.initJDA();
+                        sender.sendMessage(TextFormat.GREEN + "The bot has successfully been restarted!");
+                    } catch (LoginException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    break;
             }
         }
         return true;

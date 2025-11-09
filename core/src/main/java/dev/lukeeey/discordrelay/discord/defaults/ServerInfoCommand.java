@@ -25,7 +25,7 @@ public class ServerInfoCommand extends DiscordCommand {
                 .addField("Minecraft Version", platform.getAdapter().getServerVersion(), true);
 
         if (requestedBy) {
-            builder.setFooter("Requested by " + sender.getUser().getName() + "#" + sender.getUser().getDiscriminator());
+            builder.setFooter("Requested by " + sender.getUser().getName());
         }
         channel.sendMessageEmbeds(builder.build()).queue();
     }

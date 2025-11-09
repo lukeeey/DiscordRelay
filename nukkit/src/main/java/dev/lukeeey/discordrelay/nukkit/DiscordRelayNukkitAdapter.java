@@ -76,6 +76,7 @@ public class DiscordRelayNukkitAdapter implements IDiscordRelayAdapter {
 
         return new PlayerData(
                 player.getName(),
+                player.getUniqueId(),
                 player.getHealth(),
                 player.getFoodData().getLevel(),
                 lastSeen

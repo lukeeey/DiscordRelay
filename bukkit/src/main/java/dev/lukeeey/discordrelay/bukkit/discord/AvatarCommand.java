@@ -1,4 +1,4 @@
-package dev.lukeeey.discordrelay.discord.defaults;
+package dev.lukeeey.discordrelay.bukkit.discord;
 
 import dev.lukeeey.discordrelay.DiscordRelayPlatform;
 import dev.lukeeey.discordrelay.discord.DiscordCommand;
@@ -9,11 +9,11 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import java.awt.*;
 
-public class PlayerInfoCommand extends DiscordCommand {
+public class AvatarCommand extends DiscordCommand {
     private final DiscordRelayPlatform platform;
 
-    public PlayerInfoCommand(DiscordRelayPlatform platform) {
-        super("playerinfo", "Display info about a player on the Minecraft server");
+    public AvatarCommand(DiscordRelayPlatform platform) {
+        super("avatar", "Display a players head texture");
         this.platform = platform;
     }
 
@@ -35,16 +35,12 @@ public class PlayerInfoCommand extends DiscordCommand {
         }
 
         EmbedBuilder builder = new EmbedBuilder()
-                .setTitle("Player info")
-                .addField("Name", target.getName(), true)
-                .addField("Health", ":heart: " + target.getHealth(), true)
-                .addField("Hunger", ":chicken: " + target.getFood(), true);
+                .setTitle(target.getName() + "'s avatar")
+                .setImage("https://crafatar.com/avatars/" + target.getUniqueId().toString());
 
-        String footer = "Last seen: " + target.getLastSeen();
         if (requestedBy) {
-            footer += " | Requested by " + sender.getUser().getName();
+            builder.setFooter(" | Requested by " + sender.getUser().getName());
         }
-        builder.setFooter(footer);
         channel.sendMessageEmbeds(builder.build()).queue();
     }
 }

@@ -77,6 +77,7 @@ public class DiscordRelayBukkitAdapter implements IDiscordRelayAdapter {
 
         return new PlayerData(
                 player.getName(),
+                player.getUniqueId(),
                 (float) player.getHealth(),
                 player.getFoodLevel(),
                 lastSeen

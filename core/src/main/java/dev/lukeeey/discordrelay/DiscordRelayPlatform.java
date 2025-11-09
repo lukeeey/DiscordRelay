@@ -2,9 +2,7 @@ package dev.lukeeey.discordrelay;
 
 import dev.lukeeey.discordrelay.discord.DiscordChatListener;
 import dev.lukeeey.discordrelay.discord.DiscordCommand;
-import dev.lukeeey.discordrelay.discord.defaults.PlayerInfoCommand;
-import dev.lukeeey.discordrelay.discord.defaults.PlayerListCommand;
-import dev.lukeeey.discordrelay.discord.defaults.ServerInfoCommand;
+import dev.lukeeey.discordrelay.discord.defaults.*;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -57,7 +55,9 @@ public class DiscordRelayPlatform {
         relayChannel = jda.getTextChannelById(adapter.getConfigString("discord-bot.channel-id"));
 
         if (!adapter.getConfigString("discord-bot.status").isEmpty()) {
-            jda.getPresence().setActivity(Activity.playing(adapter.placeholderApiSupport(adapter.getConfigString("discord-bot.status"))));
+            String status = adapter.placeholderApiSupport(adapter.getConfigString("discord-bot.status"));
+            Activity.ActivityType statusType = Activity.ActivityType.valueOf(adapter.getConfigString("discord-bot.status-type").toUpperCase());
+            jda.getPresence().setActivity(Activity.of(statusType, status));
         }
 
         if (!adapter.getConfigString("discord-bot.channel-topic").isEmpty()) {
@@ -125,7 +125,7 @@ public class DiscordRelayPlatform {
     }
 
     public void sendInternalDiscordEventMessage(String configKey, Map<String, String> placeholders) {
-        sendInternalDiscordEventMessage(configKey, Collections.emptyMap(), null);
+        sendInternalDiscordEventMessage(configKey, placeholders, null);
     }
 
     public void sendInternalDiscordEventMessage(String configKey, Map<String, String> placeholders, Object playerObject) {
