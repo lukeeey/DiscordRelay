@@ -6,6 +6,10 @@
 
 A plugin for relaying chat between Discord and Minecraft.
 
+## Download
+* [Download for Nukkit (Bedrock Edition)](https://cloudburstmc.org/resources/discordrelay.667/)
+* [Download for Spigot (Java Edition)](https://www.spigotmc.org/resources/discordrelay.90263/)
+
 ## Features
 * Two-way chat between Discord and Minecraft
 * Display messages in Discord (optionally in embeds) for common events like player joins or deaths
